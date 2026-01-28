@@ -1,0 +1,25 @@
+name: ContanarizedDockerBuild
+
+on: workflow_dispatch
+
+jobs:
+  Docker_Build:
+   runs-on: ubuntu-latest
+   steps:
+     - name: checkout
+       uses: actions/checkout@v6.0.2
+       
+     - name: docker Build
+       uses: docker/setup-buildx-action@v3.12.0
+
+     - name: Docker login
+       uses: docker/login-action@v3
+       with:
+        username: ${{vars.USERNAME}}
+        password: ${{secrets.DOCKERPASS}}
+         
+     - name: Docker Build
+       run: docker build -t ${{ vars.USERNAME }}/git-action-images:dotnetimage .
+
+     - name: Docker Push
+       run: docker push ${{ vars.USERNAME }}/git-action-images:dotnetimage
